@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <title>Some company test </title>
+</head>
+<body>
+
+<div class="flex justify-center mt-2">
+    <form id="scrape-form">
+        <input type="text" id="url" placeholder="Enter URL" class="p-2 border rounded">
+        <button type="submit" class="bg-blue-500 text-white p-2 rounded">Scrape</button>
+    </form>
+</div>
+
+
+<div id="result" class="mt-4 px-8">
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('scrape-form');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
+            /**
+             * Prevent default form submission
+             */
+            e.preventDefault();
+            /**
+             * Get the URL from the input field
+             */
+            const url = document.getElementById('url').value;
+            /**
+             * Send a POST request to the server
+             * method: 'POST'
+             * headers: { 'Content-Type': 'application/json' }
+             * body: JSON.stringify({ url }) because we need to send the URL to the server
+             */
+            const response = await fetch('/scrape', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+
+            const data = await response.json();
+            /**
+             * JSON.stringify(data, null, 2) => 2 is for indentation
+             * @type {`<pre>${string}</pre>`}
+             */
+            resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+
+        });
+    });
+</script>
+
+</body>
+</html>
