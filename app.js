@@ -80,11 +80,43 @@ app.post('/scrape', async (req, res) => {
 
         const articles = await page.$$eval('#__next > main> div > div > div ', (elements) => {
             return elements.map((element, index) => {
-                const divs = element.querySelectorAll('#__next > main > div > div > div.ws3e0139.ws995ed2.wsff4a00.wsfcb598.ws3e246b.wsee0cc0.wsb442ce.ws52d3f9.ws4225c9.wse569e7 > div');
+                /**
+                 * why is divs first time not working ??
+                 */
+                // const divs = element.querySelectorAll('#__next > main > div > div > div.ws3e0139.ws995ed2.wsff4a00.wsfcb598.ws3e246b.wsee0cc0.wsb442ce.ws52d3f9.ws4225c9.wse569e7 > div ');
+                const divs = element.querySelectorAll('#__next > main > div > div > div > div ');
+                const links = document.querySelectorAll('#__next > main > div > div > div > div > a');
+                const allTimeElements = document.querySelectorAll('#__next > main > div > div > div > div > div > div > time');
+                // FIXME aduce mai mult
+                const allCategories = document.querySelectorAll('#__next > main > div > div > div > div > div > div > div');
+                const allAuthors = document.querySelectorAll('#__next > main > div > div > div > div > div > div > div > div');
+
+                let times = [];
+                let hrefs = [];
+                let categories = [];
+                let authors = [];
+                links.forEach(link => {
+                    hrefs.push(link.href);
+                });
+                allTimeElements.forEach((el) => {
+                    times.push(el.textContent);
+                });
+
+                allCategories.forEach((el) => {
+                    categories.push(el.textContent);
+                });
+
+                 allAuthors.forEach((el) => {
+                    authors.push(el.textContent);
+                });
+
+
+
+
                 const contents = Array.from(divs).map(div => div.textContent.trim());
 
                 return {
-                    contents
+                    contents, hrefs, times, categories, authors
                 };
             });
         });
@@ -98,7 +130,7 @@ app.post('/scrape', async (req, res) => {
 
 
         const sentiment = analyzeSentiment(`${articles.map(article =>{
-            // console.log('article', article)
+            console.log('article', article)
             return article.contents
         }).join(' ')}`);
 
@@ -133,6 +165,8 @@ app.post('/scrape', async (req, res) => {
     }
 });
 
+
+// #__next > main > div > div > div.ws3e0139.ws995ed2.wsff4a00.wsfcb598.ws3e246b.wsee0cc0.wsb442ce.ws52d3f9.ws4225c9.wse569e7 > div:nth-child(2) > a
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
