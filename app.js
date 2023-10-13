@@ -111,8 +111,6 @@ app.post('/scrape', async (req, res) => {
                 });
 
 
-
-
                 const contents = Array.from(divs).map(div => div.textContent.trim());
 
                 return {
@@ -130,7 +128,6 @@ app.post('/scrape', async (req, res) => {
 
 
         const sentiment = analyzeSentiment(`${articles.map(article =>{
-            console.log('article', article)
             return article.contents
         }).join(' ')}`);
 
@@ -146,7 +143,6 @@ app.post('/scrape', async (req, res) => {
             };
         });
 
-        // console.log('articlesWithTime', articlesWithTime)
 
         writeFile('articles.json', JSON.stringify(articlesWithTime), (err) => {
             if (err) throw err;
@@ -165,7 +161,7 @@ app.post('/scrape', async (req, res) => {
     }
 });
 
-
+// initial
 // #__next > main > div > div > div.ws3e0139.ws995ed2.wsff4a00.wsfcb598.ws3e246b.wsee0cc0.wsb442ce.ws52d3f9.ws4225c9.wse569e7 > div:nth-child(2) > a
 
 const PORT = process.env.PORT || 3001;
